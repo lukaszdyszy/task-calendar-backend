@@ -40,7 +40,7 @@ class Task {
         $resp = array();
 
         try {
-            $result = $this->conn->prepare("SELECT * FROM $this->table WHERE `user_id` = ?");
+            $result = $this->conn->prepare("SELECT * FROM $this->table WHERE `user_id` = ? AND `date_time` LIKE '$this->date_time%'");
             if($result == false){
                 throw new Exception('Prepared query failure');
             }
@@ -63,16 +63,20 @@ class Task {
         return $resp;
     }
 
-    public function mark(){
+    public function edit(){
         $resp = array();
 
         try {
-            $result = $this->conn->prepare("UPDATE $this->table SET `done`=? WHERE `ID`=?");
+            $result = $this->conn->prepare("UPDATE $this->table SET 
+            `title`=ifnull(?, title), 
+            `date_time`=ifnull(?, date_time), 
+            `done`=ifnull(?, done) WHERE `ID`=?");
+
             if($result == false){
                 throw new Exception('Prepared query failure');
             }
 
-            $result->bind_param('ii', $this->done, $this->id);
+            $result->bind_param('ssii', $this->title, $this->date_time, $this->done, $this->id);
             if($result->execute() == false){
                 throw new Exception('Query execute failure');
             }

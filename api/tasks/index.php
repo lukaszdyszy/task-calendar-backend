@@ -32,14 +32,17 @@ if(gettype($conn) == 'object'){
         }
     } else if($method == 'GET') {
         $task->user_id = $_GET['user_id'];
+        $task->date_time = $_GET['date_time'];
 
         $response = $task->getTasksFromUser();
     } else if($method == 'PUT') {
-        if(isset($data->id) && isset($data->done)){
+        if(isset($data->id)){
             $task->id = $data->id;
+            $task->title = $data->title;
+            $task->date_time = $data->date_time;
             $task->done = $data->done;
 
-            $response = $task->mark();
+            $response = $task->edit();
         } else {
             $response = array('message' => 'failed');
         }
