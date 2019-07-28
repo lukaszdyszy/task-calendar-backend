@@ -40,7 +40,7 @@ class Task {
         $resp = array();
 
         try {
-            $result = $this->conn->prepare("SELECT * FROM $this->table WHERE `user_id` = ? AND `date_time` LIKE '$this->date_time%'");
+            $result = $this->conn->prepare("SELECT * FROM $this->table WHERE `user_id` = ? AND `date_time` LIKE '$this->date_time%' ORDER BY `date_time` ASC");
             if($result == false){
                 throw new Exception('Prepared query failure');
             }
