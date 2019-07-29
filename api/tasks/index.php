@@ -38,9 +38,9 @@ if(gettype($conn) == 'object'){
     } else if($method == 'PUT') {
         if(isset($data->id)){
             $task->id = $data->id;
-            $task->title = $data->title;
-            $task->date_time = $data->date_time;
-            $task->done = $data->done;
+            if(isset($data->title)){$task->title = $data->title;}else{$task->title = null;}
+            if(isset($data->date_time)){$task->date_time = $data->date_time;}else{$task->date_time = null;}
+            if(isset($data->done)){$task->done = $data->done;}else{$task->done = null;}
 
             $response = $task->edit();
         } else {
