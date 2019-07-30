@@ -63,6 +63,32 @@ class Task {
         return $resp;
     }
 
+    public function getTaskById(){
+        $resp = array();
+
+        try{
+            $result = $this->conn->prepare("SELECT `user_id` FROM $this->table WHERE `ID` = ?");
+            if($result == false){
+                throw new Exception('Prepared query failure');
+            }
+
+            $result->bind_param('i', $this->id);
+            if($result->execute() == false){
+                throw new Exception('Query execute failure');
+            }
+
+            $result->bind_result($user_id);
+            $result->store_result();
+            $result->fetch();
+
+            $resp = array('user_id' => $user_id);
+        } catch(Exception $e){
+            $resp = array('message' => $e->getMessage());
+        }
+
+        return $resp;
+    }
+
     public function edit(){
         $resp = array();
 
