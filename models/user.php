@@ -134,6 +134,37 @@ class User {
 
         return $resp;
     }
+
+    public function changePassword(){
+        $resp = array('Error' => 0);
+
+        $v_pass = $this->passwordValidate();
+
+        if(!$v_pass['valid']){
+            $resp['Error'] = 1;
+            $resp['message'] = 'Password does not match requirements.';
+        } else {
+            try{
+                $result = $this->conn->prepare("UPDATE $this->table SET password=? WHERE ID=?");
+                if(!$result){
+                    throw new Exception('Invalid query');
+                }
+                
+                $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+                $result->bind_param("si", $this->password, $this->id);
+                if(!$result->execute()){
+                    throw new Exception('Query execution error');
+                }
+
+                $resp['message'] = 'Success';
+            } catch(Exception $e){
+                $resp['Error'] = 1;
+                $resp['message'] = $e->getMessage();
+            }
+        }
+
+        return $resp;
+    }
 }
 
 ?>
