@@ -19,6 +19,7 @@ if(gettype($conn) == 'object'){
     $resp = $user->login();
     if($resp['error']==0 && $resp['logged']){
         session_start();
+        session_regenerate_id();
         $_SESSION['logged'] = true;
         $_SESSION['id'] = $resp['id'];
         $_SESSION['email'] = $resp['email'];
